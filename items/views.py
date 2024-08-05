@@ -58,4 +58,18 @@ def single_item(request, item_id):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_item(request):
+    data = request.data
+    try:
+        item = Items.objects.create(
+            item_name = data['item_name'],
+            item_description = data['item_description']
+        )
+        serializer = ItemSerializer(item)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
