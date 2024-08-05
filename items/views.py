@@ -71,5 +71,32 @@ def create_item(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_item(request , item_id):
+    data = request.data
+    try:
+        item = Items.objects.get(id=item_id)
+        item.item_name = data['item_name']
+        item.item_description = data['item_description']
+        item.save()
+        serializer = ItemSerializer(item)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except ObjectDoesNotExist:
+        return Response({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_item(request, item_id):
+    try:
+        item = Items.objects.get(id=item_id)
+        item.delete()
+        return Response({'message': 'Item deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+    except ObjectDoesNotExist:
+        return Response({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
