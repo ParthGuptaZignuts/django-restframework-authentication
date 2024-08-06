@@ -13,7 +13,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils import timezone
-
+from rest_framework.pagination import PageNumberPagination
 @api_view(['POST'])
 @permission_classes([])
 def register_user(request):
@@ -63,9 +63,11 @@ def login_user(request):
 @permission_classes([IsAuthenticated])
 def all_items(request):
     try:
-        items = Items.objects.all()
+        paginator  = PageNumberPagination()
+        paginator.page_size = 10
+        items      = Items.objects.all()
         serializer = ItemSerializer(items, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return paginator.get_paginated_response(serializer.data)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -73,7 +75,7 @@ def all_items(request):
 @permission_classes([IsAuthenticated])
 def single_item(request, item_id):
     try:
-        item = Items.objects.get(id=item_id)
+        item       = Items.objects.get(id=item_id)
         serializer = ItemSerializer(item)
         return Response(serializer.data, status=status.HTTP_200_OK)
     except ObjectDoesNotExist:
@@ -86,9 +88,9 @@ def single_item(request, item_id):
 def create_item(request):
     data = request.data
     try:
-        item = Items.objects.create(
-            item_name = data['item_name'],
-            item_description = data['item_description']
+        item             = Items.objects.create(
+        item_name        = data['item_name'],
+        item_description = data['item_description']
         )
         serializer = ItemSerializer(item)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -100,8 +102,8 @@ def create_item(request):
 def update_item(request , item_id):
     data = request.data
     try:
-        item = Items.objects.get(id=item_id)
-        item.item_name = data['item_name']
+        item                  = Items.objects.get(id=item_id)
+        item.item_name        = data['item_name']
         item.item_description = data['item_description']
         item.save()
         serializer = ItemSerializer(item)
