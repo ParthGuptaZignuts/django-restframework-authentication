@@ -40,7 +40,7 @@ def login_user(request):
             subject = 'Login Notification'
             html_message = render_to_string('login_notification_email.html', {
                 'user': user,
-                'login_time': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'login_time': timezone.now().strftime('%d-%m-%Y'),
             })
             plain_message = strip_tags(html_message)
 
@@ -141,6 +141,20 @@ def change_password(request):
     try:
         user.set_password(new_password)
         user.save()
-        return Response({'message': 'Password changed successfully'}, status=status.HTTP_200_OK)
+        login_url = "http://127.0.0.1:8000/api/login-user"
+        subject = 'Password Changed Successfully'
+        html_message = render_to_string('password_changed_notification_email.html', {
+            'login_link': login_url
+        })
+        plain_message = strip_tags(html_message)
+        send_mail(
+            subject,
+            plain_message,
+            settings.EMAIL_HOST_USER,
+            [user.email],
+            fail_silently=False,
+            html_message=html_message,
+        )
+        return Response({'message': 'Password changed successfully. A notification email has been sent.'}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
