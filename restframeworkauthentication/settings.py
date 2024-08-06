@@ -57,7 +57,7 @@ ROOT_URLCONF = 'restframeworkauthentication.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'Templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,3 +135,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = '8db13c2d80e87e'
+EMAIL_HOST_PASSWORD = '6246ef424402fc'
+EMAIL_PORT = '2525'
+DEFAULT_FROM_EMAIL = 'admin@example.com'

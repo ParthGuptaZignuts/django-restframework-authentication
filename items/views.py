@@ -8,6 +8,12 @@ from rest_framework.permissions import IsAuthenticated
 from items.models import Items
 from .serializer import ItemSerializer
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.utils import timezone
+
 @api_view(['POST'])
 @permission_classes([])
 def register_user(request):
@@ -30,6 +36,23 @@ def login_user(request):
         user = authenticate(username=data['username'], password=data['password'])
         if user is not None:
             token, _ = Token.objects.get_or_create(user=user)
+
+            subject = 'Login Notification'
+            html_message = render_to_string('login_notification_email.html', {
+                'user': user,
+                'login_time': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
+            })
+            plain_message = strip_tags(html_message)
+
+            send_mail(
+                subject,
+                plain_message,
+                settings.EMAIL_HOST_USER, 
+                [user.email],             
+                fail_silently=False,
+                html_message=html_message, 
+            )
+
             return Response({"username": user.username, "token": token.key}, status=status.HTTP_200_OK)
         else:
             return Response({"message": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
