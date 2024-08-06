@@ -179,7 +179,7 @@ def request_password_reset(request):
         uid        = urlsafe_base64_encode(force_bytes(user.pk))
         reset_link = request.build_absolute_uri(reverse('reset-password', args=[uid, token]))
 
-        subject = 'Password Reset Request'
+        subject      = 'Password Reset Request'
         html_message = render_to_string('password_reset_email.html', {
             'user': user,
             'reset_link': reset_link,
@@ -213,7 +213,21 @@ def reset_password(request, uidb64, token):
 
             user.set_password(new_password)
             user.save()
+
+            subject      = "Password Changed Successfully"
+
+            html_message = render_to_string('password_reset_successfully.html')
             
+            plain_message = strip_tags(html_message)
+
+            send_mail(
+                subject,
+                plain_message,
+                settings.EMAIL_HOST_USER,
+                [user.email],
+                fail_silently=False,
+                html_message=html_message,
+            )
 
             return Response({'message': 'Password reset successfully.'}, status=status.HTTP_200_OK)
         else:
