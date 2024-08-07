@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'products.middleware.admin_check_middleware.AdminCheckMiddleware'
 ]
 
 ROOT_URLCONF = 'restframeworkauthentication.urls'
