@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'items',
     'rest_framework.authtoken',
-    'products'
+    'products',
+    'person'
 ]
 
 MIDDLEWARE = [
@@ -51,7 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'products.middleware.admin_check_middleware.AdminCheckMiddleware'
+    'products.middleware.AdminOnlyMiddleware'
 ]
 
 ROOT_URLCONF = 'restframeworkauthentication.urls'
