@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'items',
     'rest_framework.authtoken',
     'products',
-    'person'
+    'person',
+    'Library'
 ]
 
 MIDDLEWARE = [

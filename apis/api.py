@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from items.views import register_user,login_user,all_items,single_item,create_item,update_item,delete_item,change_password,request_password_reset,reset_password
 from products.views import all_products,single_product,update_product,create_product,delete_product
+from Library.views import all_libraries,single_library,create_library,update_library,delete_library,all_books,single_book,create_book,update_book,delete_book
 
 urlpatterns = [
    path('register-user',register_user),
@@ -19,4 +20,14 @@ urlpatterns = [
    path('products/create/',create_product, name='create_product'),
    path('products/update/<int:product_id>/',update_product, name='update_product'),
    path('products/delete/<int:product_id>/',delete_product, name='delete_product'),
+   path('libraries/',all_libraries, name='all_libraries'),
+   path('libraries/<int:library_id>/',single_library, name='single_library'),
+   path('libraries/create/',create_library, name='create_library'),
+   path('libraries/update/<int:library_id>/',update_library, name='update_library'),
+   path('libraries/delete/<int:library_id>/',delete_library, name='delete_library'),
+   path('books/',all_books, name='all_books'),
+   path('books/<int:book_id>/',single_book, name='single_book'),
+   path('books/create/',create_book, name='create_book'),
+   path('books/update/<int:book_id>/',update_book, name='update_book'),
+   path('books/delete/<int:book_id>/',delete_book, name='delete_book'),
 ]
