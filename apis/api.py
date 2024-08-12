@@ -3,7 +3,7 @@ from django.urls import path
 from items.views import register_user,login_user,all_items,single_item,create_item,update_item,delete_item,change_password,request_password_reset,reset_password
 from products.views import all_products,single_product,update_product,create_product,delete_product
 from Library.views import all_libraries,single_library,create_library,update_library,delete_library,all_books,single_book,create_book,update_book,delete_book
-from authors.views import all_authors
+from authors.views import all_authors , create_author
 
 urlpatterns = [
    path('register-user',register_user),
@@ -32,5 +32,6 @@ urlpatterns = [
    path('books/update/<int:book_id>/',update_book, name='update_book'),
    path('books/delete/<int:book_id>/',delete_book, name='delete_book'),
 
-   path('authors',all_authors, name = "authors")
+   path('authors',all_authors, name = "authors"),
+   path('create_author',create_author , name = "create_author")
 ]

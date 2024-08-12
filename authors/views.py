@@ -17,3 +17,18 @@ def all_authors(request):
     result_page         = paginator.paginate_queryset(authors, request)
     serializer          = AuthorSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def create_author(request) :
+    data = request.data 
+    try : 
+        author = Author.objects.create(
+            name = data['name'],
+            bio  = data['bio'],
+            image = data['image']
+        )
+        serializer = AuthorSerializer(author)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
